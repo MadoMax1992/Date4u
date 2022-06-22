@@ -26,4 +26,9 @@ class Profile {
     photos = profileMap['photos'];
 
   }
+
+  @override
+  String toString() {
+    return 'Profile{id: $id, nickname: $nickname, birthdate: $birthdate, hornLength: $hornLength, gender: $gender, attractedToGender: $attractedToGender, description: $description, lastSeen: $lastSeen, photos: $photos}';
+  }
 }

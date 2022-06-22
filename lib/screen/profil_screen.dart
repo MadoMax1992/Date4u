@@ -1,7 +1,9 @@
 import 'package:date4u/data/Profile.dart';
 import 'package:date4u/shared/menu_drawer.dart';
+import 'package:date4u/util/global.dart';
 import 'package:flutter/material.dart';
 import 'package:date4u/data/Photo.dart';
+import 'package:date4u/util/profile_helper.dart';
 
 import '../util/http_helper.dart';
 
@@ -18,16 +20,18 @@ class ProfilScreen extends StatefulWidget {
 
 class _ProfilScreenState extends State<ProfilScreen> {
   final double fontSize = 20;
-  Profile profile = Profile(0, '', '', 0, 0, 0, '', '', <Photo>[]);
+  // Profile profile = Profile(0, '', '', 0, 0, 0, '', '', <Photo>[]);
 
   late Future<Profile> futureProfile;
 
   final HttpHelper httpHelper = HttpHelper();
+  final ProfileHelper profileHelper = ProfileHelper();
 
   @override
   void initState() {
     super.initState();
     futureProfile = httpHelper.getProfile(widget.id.toString());
+
   }
 
 
@@ -59,18 +63,19 @@ class _ProfilScreenState extends State<ProfilScreen> {
               future: futureProfile,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
+                  loggedInProfile = snapshot.data!;
                    return  Column(
                     children: [
                       Padding(padding: EdgeInsets.all(5),
                         child:
-                        Text(snapshot.data!.nickname, style: TextStyle(fontSize: fontSize)),
+                        Text(loggedInProfile.nickname, style: TextStyle(fontSize: fontSize)),
                       ),
-                      profileInfoRow('Horn Length: ',  snapshot.data!.hornLength.toString()),
-                      profileInfoRow('Age: ', calculateAge(DateTime.parse(snapshot.data!.birthdate)).toString()),
-                      profileInfoRow('Gender: ', snapshot.data!.gender.toString()),
-                      profileInfoRow('Attracted To: ', snapshot.data!.attractedToGender.toString()),
-                      profileInfoRow('Description: ', snapshot.data!.description),
-                      profileInfoRow('last Seen: ', snapshot.data!.lastSeen),
+                      profileInfoRow('Horn Length: ',  loggedInProfile.hornLength.toString()),
+                      profileInfoRow('Age: ', profileHelper.calculateAge(DateTime.parse(loggedInProfile.birthdate)).toString()),
+                      profileInfoRow('Gender: ', loggedInProfile.gender.toString()),
+                      profileInfoRow('Attracted To: ', loggedInProfile.attractedToGender.toString()),
+                      profileInfoRow('Description: ', loggedInProfile.description),
+                      profileInfoRow('last Seen: ', loggedInProfile.lastSeen),
                       profileInfoRow('fotos: ', 'not implmented'),
                     ],
                   );
@@ -92,7 +97,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
 
   Widget profileInfoRow(String label, String value) {
     Widget row =Padding(
-      padding: EdgeInsets.all(20),
+      padding: EdgeInsets.all(10),
       child: Row(
         children: [
           Expanded(
@@ -122,22 +127,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
   // }
 
 
-  calculateAge(DateTime birthDate) {
-    DateTime currentDate = DateTime.now();
-    int age = currentDate.year - birthDate.year;
-    int month1 = currentDate.month;
-    int month2 = birthDate.month;
-    if (month2 > month1) {
-      age--;
-    } else if (month1 == month2) {
-      int day1 = currentDate.day;
-      int day2 = birthDate.day;
-      if (day2 > day1) {
-        age--;
-      }
-    }
-    return age;
-  }
+
 }
 
 

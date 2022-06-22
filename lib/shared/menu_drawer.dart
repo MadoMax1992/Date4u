@@ -1,6 +1,7 @@
 import 'package:date4u/screen/login_screen.dart';
 import 'package:date4u/screen/profil_screen.dart';
 import 'package:date4u/screen/search_screen.dart';
+import 'package:date4u/util/global.dart';
 import 'package:flutter/material.dart';
 
 class MenuDrawer extends StatelessWidget {
@@ -36,7 +37,7 @@ class MenuDrawer extends StatelessWidget {
         onTap: () {
           switch (element) {
             case 'Profil':
-              screen = ProfilScreen(1);//TODO welches Profil bin ich nach login
+              screen = ProfilScreen(loggedInProfile.id);//TODO welches Profil bin ich nach login
               break;
             case 'Search':
               screen = SearchScreen();

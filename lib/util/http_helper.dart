@@ -21,6 +21,7 @@ class HttpHelper {
 
     Map<String, dynamic> data = json.decode(result.body);
 
+
     return Profile.fromJson(data);
   }
 
@@ -37,7 +38,6 @@ class HttpHelper {
   }
 
 
-  // Future<List<Profile>> getProfiles (int minAge, int maxAge,
 
   Future<List<Profile>> getProfiles (int minAge, int maxAge,
       int minHornLength, int maxHornLength, int gender) async {
@@ -47,7 +47,6 @@ class HttpHelper {
     Uri uri = Uri.http(domain, profilesPath, parameters);
     http.Response result = await http.get(uri);
 
-    // Future<List<Profile>> profiles = [] as Future<List<Profile>>;
 
     Iterable iterable = json.decode(result.body);
 
