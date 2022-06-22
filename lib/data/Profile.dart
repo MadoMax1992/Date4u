@@ -20,7 +20,7 @@ class Profile {
     birthdate = profileMap['birthdate'];
     hornLength = profileMap['hornlength'];
     gender = profileMap['gender'];
-    attractedToGender = profileMap['attractedToGender'];
+    attractedToGender = profileMap['attractedToGender']?? 0;
     description = profileMap['description'];
     lastSeen = profileMap['lastseen'];
     photos = profileMap['photos'];
