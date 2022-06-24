@@ -21,6 +21,7 @@ class Profile {
     hornLength = profileMap['hornlength'];
     gender = profileMap['gender'];
     attractedToGender = profileMap['attractedToGender']?? 0;
+    //TODO Klassen so wie in Flutter anlegen und dann wiehier auf null safty prüfen
     description = profileMap['description'];
     lastSeen = profileMap['lastseen'];
     photos = profileMap['photos'];

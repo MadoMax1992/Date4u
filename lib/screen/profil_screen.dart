@@ -1,8 +1,9 @@
 import 'package:date4u/data/Profile.dart';
+import 'package:date4u/screen/edit_profile_screen.dart';
+import 'package:date4u/screen/login_screen.dart';
 import 'package:date4u/shared/menu_drawer.dart';
 import 'package:date4u/util/global.dart';
 import 'package:flutter/material.dart';
-import 'package:date4u/data/Photo.dart';
 import 'package:date4u/util/profile_helper.dart';
 
 import '../util/http_helper.dart';
@@ -20,17 +21,19 @@ class ProfilScreen extends StatefulWidget {
 
 class _ProfilScreenState extends State<ProfilScreen> {
   final double fontSize = 20;
-  // Profile profile = Profile(0, '', '', 0, 0, 0, '', '', <Photo>[]);
-
   late Future<Profile> futureProfile;
+
+  bool _ownProfile = false;
 
   final HttpHelper httpHelper = HttpHelper();
   final ProfileHelper profileHelper = ProfileHelper();
 
-  @override
   void initState() {
     super.initState();
     futureProfile = httpHelper.getProfile(widget.id.toString());
+    if (widget.id == loggedInProfile.id){
+      _ownProfile = true;
+    }
 
   }
 
@@ -58,24 +61,42 @@ class _ProfilScreenState extends State<ProfilScreen> {
               ),
             ),
           ),
+          Container(
+            alignment: Alignment.center,
+              child: Column(
+                children: [
+                  if (_ownProfile)
+                    ElevatedButton(
+                      child: Text('Edit Profile'),
+                      onPressed: ((){
+                        Navigator.of(context).pop();
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => EditProfile())
+                        );
+                      }),
+                    )
+                 ],
+              ),
+          ),
+
+
           Padding(padding: EdgeInsets.all(5),
             child: FutureBuilder<Profile>(
               future: futureProfile,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  loggedInProfile = snapshot.data!;
                    return  Column(
                     children: [
                       Padding(padding: EdgeInsets.all(5),
                         child:
                         Text(loggedInProfile.nickname, style: TextStyle(fontSize: fontSize)),
                       ),
-                      profileInfoRow('Horn Length: ',  loggedInProfile.hornLength.toString()),
-                      profileInfoRow('Age: ', profileHelper.calculateAge(DateTime.parse(loggedInProfile.birthdate)).toString()),
-                      profileInfoRow('Gender: ', loggedInProfile.gender.toString()),
-                      profileInfoRow('Attracted To: ', loggedInProfile.attractedToGender.toString()),
-                      profileInfoRow('Description: ', loggedInProfile.description),
-                      profileInfoRow('last Seen: ', loggedInProfile.lastSeen),
+                      profileInfoRow('Horn Length: ',  snapshot.data!.hornLength.toString()),
+                      profileInfoRow('Age: ', profileHelper.calculateAge(DateTime.parse(snapshot.data!.birthdate)).toString()),
+                      profileInfoRow('Gender: ', snapshot.data!.gender.toString()),
+                      profileInfoRow('Attracted To: ', snapshot.data!.attractedToGender.toString()),
+                      profileInfoRow('Description: ', snapshot.data!.description),
+                      profileInfoRow('last Seen: ', snapshot.data!.lastSeen),
                       profileInfoRow('fotos: ', 'not implmented'),
                     ],
                   );

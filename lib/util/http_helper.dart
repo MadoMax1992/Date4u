@@ -10,13 +10,14 @@ class HttpHelper {
 
   // https://api.openweathermap.org/data/2.5/weather?q=Bremen&appid=fc46e9ef462b6947a63364eb1db382b5
 
-  final String domain = '10.0.2.2:8080';
-  final String profilePath = 'profile/';
-  final String profilesPath = 'profiles/';
-  final String loginPath = 'unicorn/';
+  final String _domain = '10.0.2.2:8080';
+  final String _profilePath = 'profile/';
+  final String _profilesPath = 'profiles/';
+  final String _loginPath = 'unicorn/';
+  final String _updatePath = 'profileUpdate';
 
   Future<Profile> getProfile (String id) async {
-    Uri uri = Uri.http(domain, profilePath+id);
+    Uri uri = Uri.http(_domain, _profilePath+id);
     http.Response result = await http.get(uri);
 
     Map<String, dynamic> data = json.decode(result.body);
@@ -26,10 +27,42 @@ class HttpHelper {
   }
 
 
+  Future<Profile> updateProfile (Profile updatedProfile) async {
+    Uri uri = Uri.http(_domain, _updatePath);
+
+    final response = await http.post(uri,
+      headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+      body: jsonEncode(<String, dynamic>{
+        'id': updatedProfile.id.toString(),
+        'nickname' :updatedProfile.nickname,
+        'birthdate' :updatedProfile.birthdate,
+        'hornlength':updatedProfile.hornLength,
+        'gender': updatedProfile.gender,
+        'attractedToGender' : updatedProfile.attractedToGender,
+        'description' : updatedProfile.description
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      // If the server did return a 201 CREATED response,
+      // then parse the JSON.
+      return Profile.fromJson(jsonDecode(response.body));
+    } else {
+      // If the server did not return a 201 CREATED response,
+      // then throw an exception.
+      throw Exception('Failed to update Profile.');
+    }
+
+
+  }
+
+
   Future<Unicorn> fetchUnicorn (String mail, String password) async {
     Map<String, dynamic> parameters = {'mail': mail, 'password': password};
 
-    Uri uri = Uri.http(domain, loginPath, parameters);
+    Uri uri = Uri.http(_domain, _loginPath, parameters);
     http.Response result = await http.get(uri);
 
     Map<String, dynamic> data = json.decode(result.body);
@@ -44,7 +77,7 @@ class HttpHelper {
 
     Map<String, dynamic> parameters = {'minAge': minAge, 'maxAge': maxAge,
       'minHornLength': minHornLength, 'maxHornLength': maxHornLength, 'gender': gender}.map((key, value) => MapEntry(key, value.toString()));
-    Uri uri = Uri.http(domain, profilesPath, parameters);
+    Uri uri = Uri.http(_domain, _profilesPath, parameters);
     http.Response result = await http.get(uri);
 
 

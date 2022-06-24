@@ -18,7 +18,7 @@ void main() {
         routes: {
           'login': (context) => const LoginScreen(),
           'search': (context) => const SearchScreen(),
-          // 'edit' : (context) => const EditProfile(),
+          'edit' : (context) => const EditProfile(),
           'profil': (context) => ProfilScreen(loggedInProfile.id), //TODO Profil reingeben oder alles hier löschen ? geht galub ich ohne Routen
         }),
   );

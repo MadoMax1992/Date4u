@@ -1,10 +1,10 @@
 import 'package:date4u/screen/profil_screen.dart';
+import 'package:date4u/util/global.dart';
 import 'package:flutter/material.dart';
 import 'package:date4u/data/Unicorn.dart';
 import 'dart:developer';
-
-
 import '../util/http_helper.dart';
+
 
 
 class LoginScreen extends StatefulWidget {
@@ -20,8 +20,11 @@ class _LoginScreenState extends State<LoginScreen> {
   //TODO https://docs.flutter.dev/cookbook/networking/fetch-data
   // so gehts richtig ohne blöde -1 startwert
 
+  final HttpHelper httpHelper = HttpHelper();
   final TextEditingController txtMail = TextEditingController();
   final TextEditingController txtPassword = TextEditingController();
+  HttpHelper helper = HttpHelper();
+
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: ElevatedButton(
               child: Text('Login with ID 4'),
               onPressed: (() {
-                Navigator.of(context).pop();
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => ProfilScreen(4))
-                );
+                byPassLogin();
               }),
             ),)
         ],
@@ -61,19 +61,27 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  Future byPassLogin() async {
+  loggedInProfile = await helper.getProfile(4.toString());
+  Navigator.of(context).pop();
+  Navigator.of(context).push(
+  MaterialPageRoute(builder: (context) => ProfilScreen(loggedInProfile.id))
+  );
+}
+
   Future checkLogin(mail, password) async {
-    HttpHelper helper = HttpHelper();
     unicorn = await helper.fetchUnicorn(mail, password);
 
-    if(unicorn.id == 0) { // schlecht Bedingung
+    if (unicorn.id == 0) { //TODO Meldung dafür dsa Login nicht korrekt ist
       txtMail.text = 'Wrong creds or Unicorn not Found';
       setState(() {
       });
 
     } else {
+      loggedInProfile = await helper.getProfile(unicorn.id.toString());
       Navigator.of(context).pop();
       Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => ProfilScreen(unicorn.id))
+          MaterialPageRoute(builder: (context) => ProfilScreen(loggedInProfile.id))
       );
     }
   }

@@ -34,12 +34,6 @@ class _SearchScreenState extends State<SearchScreen> {
 
   late Future<List<Profile>> futterProfiles;
 
-  @override
-  void initState() {
-    super.initState();
-    futterProfiles = httpHelper.getProfiles(_ageRange.start.toInt(), _ageRange.end.toInt(), _hornLengthRange.start.toInt(),
-        _hornLengthRange.end.toInt() , int.parse(_genderValue));
-  }
 
 
   @override
@@ -162,7 +156,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           snapshot.data!.removeAt(i);
                         }
                       }
-                      if (snapshot.data!.isEmpty) {
+                      if (snapshot.data!.isEmpty) { //TODO not working
                         return Text('No Unicorns Found :(');
                       }
                       return Column(
@@ -228,7 +222,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
                         ],
                       );
-                     }else if(snapshot.hasError) {
+                      }else if(snapshot.hasError) {
                       return Text('${snapshot.error}');
                     }
                     return const CircularProgressIndicator();
