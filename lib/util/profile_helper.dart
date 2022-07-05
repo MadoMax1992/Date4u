@@ -1,6 +1,4 @@
 class ProfileHelper {
-
-
   calculateAge(DateTime birthDate) {
     DateTime currentDate = DateTime.now();
     int age = currentDate.year - birthDate.year;

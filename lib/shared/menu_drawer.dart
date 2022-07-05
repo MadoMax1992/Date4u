@@ -17,27 +17,24 @@ class MenuDrawer extends StatelessWidget {
   }
 
   List<Widget> buildMenuItems(BuildContext context) {
-    final List<String> menuTitles = [
-      'Profil',
-      'Search',
-      'Logout'
-    ];
+    final List<String> menuTitles = ['Profil', 'Search', 'Logout'];
     List<Widget> menuItemes = [];
     menuItemes.add(DrawerHeader(
       decoration: BoxDecoration(color: Colors.blueGrey),
-      child: Text('Date4u',
-        style: TextStyle(color: Colors.white, fontSize: 28),),
+      child: Text(
+        'Date4u',
+        style: TextStyle(color: Colors.white, fontSize: 28),
+      ),
     ));
 
     menuTitles.forEach((String element) {
       Widget screen = Container();
       menuItemes.add(ListTile(
-        title: Text(element,
-            style: TextStyle(fontSize: 18)),
+        title: Text(element, style: TextStyle(fontSize: 18)),
         onTap: () {
           switch (element) {
             case 'Profil':
-              screen = ProfilScreen(loggedInProfile.id);//TODO welches Profil bin ich nach login
+              screen = ProfilScreen(loggedInProfile.id);
               break;
             case 'Search':
               screen = SearchScreen();
@@ -47,9 +44,8 @@ class MenuDrawer extends StatelessWidget {
               break;
           }
           Navigator.of(context).pop();
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => screen)
-          );
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => screen));
         },
       ));
     });

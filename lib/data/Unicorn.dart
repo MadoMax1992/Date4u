@@ -8,7 +8,6 @@ class Unicorn {
   late String password;
   late Map<String, dynamic> profile;
 
-
   Unicorn(this.id, this.mail, this.password, this.profile);
 
   Unicorn.fromJson(Map<String, dynamic> unicornMap) {
@@ -18,3 +17,6 @@ class Unicorn {
     profile = unicornMap['profile'];
   }
 }
+
+
+

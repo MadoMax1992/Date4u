@@ -7,41 +7,37 @@ import 'dart:convert';
 import '../data/Unicorn.dart';
 
 class HttpHelper {
-
-  // https://api.openweathermap.org/data/2.5/weather?q=Bremen&appid=fc46e9ef462b6947a63364eb1db382b5
-
   final String _domain = '10.0.2.2:8080';
   final String _profilePath = 'profile/';
   final String _profilesPath = 'profiles/';
   final String _loginPath = 'unicorn/';
   final String _updatePath = 'profileUpdate';
 
-  Future<Profile> getProfile (String id) async {
-    Uri uri = Uri.http(_domain, _profilePath+id);
+  Future<Profile> getProfile(String id) async {
+    Uri uri = Uri.http(_domain, _profilePath + id);
     http.Response result = await http.get(uri);
 
     Map<String, dynamic> data = json.decode(result.body);
 
-
     return Profile.fromJson(data);
   }
 
-
-  Future<Profile> updateProfile (Profile updatedProfile) async {
+  Future<Profile> updateProfile(Profile updatedProfile) async {
     Uri uri = Uri.http(_domain, _updatePath);
 
-    final response = await http.post(uri,
+    final response = await http.post(
+      uri,
       headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
       body: jsonEncode(<String, dynamic>{
         'id': updatedProfile.id.toString(),
-        'nickname' :updatedProfile.nickname,
-        'birthdate' :updatedProfile.birthdate,
-        'hornlength':updatedProfile.hornLength,
+        'nickname': updatedProfile.nickname,
+        'birthdate': updatedProfile.birthdate,
+        'hornlength': updatedProfile.hornLength,
         'gender': updatedProfile.gender,
-        'attractedToGender' : updatedProfile.attractedToGender,
-        'description' : updatedProfile.description
+        'attractedToGender': updatedProfile.attractedToGender,
+        'description': updatedProfile.description
       }),
     );
 
@@ -54,12 +50,9 @@ class HttpHelper {
       // then throw an exception.
       throw Exception('Failed to update Profile.');
     }
-
-
   }
 
-
-  Future<Unicorn> fetchUnicorn (String mail, String password) async {
+  Future<Unicorn> fetchUnicorn(String mail, String password) async {
     Map<String, dynamic> parameters = {'mail': mail, 'password': password};
 
     Uri uri = Uri.http(_domain, _loginPath, parameters);
@@ -70,23 +63,23 @@ class HttpHelper {
     return Unicorn.fromJson(data);
   }
 
-
-
-  Future<List<Profile>> getProfiles (int minAge, int maxAge,
-      int minHornLength, int maxHornLength, int gender) async {
-
-    Map<String, dynamic> parameters = {'minAge': minAge, 'maxAge': maxAge,
-      'minHornLength': minHornLength, 'maxHornLength': maxHornLength, 'gender': gender}.map((key, value) => MapEntry(key, value.toString()));
+  Future<List<Profile>> getProfiles(int minAge, int maxAge, int minHornLength,
+      int maxHornLength, int gender) async {
+    Map<String, dynamic> parameters = {
+      'minAge': minAge,
+      'maxAge': maxAge,
+      'minHornLength': minHornLength,
+      'maxHornLength': maxHornLength,
+      'gender': gender
+    }.map((key, value) => MapEntry(key, value.toString()));
     Uri uri = Uri.http(_domain, _profilesPath, parameters);
     http.Response result = await http.get(uri);
 
-
     Iterable iterable = json.decode(result.body);
 
-    List<Profile> profiles = List<Profile>.from(iterable.map((model)=> Profile.fromJson(model)));
+    List<Profile> profiles =
+        List<Profile>.from(iterable.map((model) => Profile.fromJson(model)));
 
     return profiles;
-
   }
-
 }

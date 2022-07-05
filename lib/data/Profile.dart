@@ -8,7 +8,7 @@ class Profile {
   int gender = 1;
   int attractedToGender = 0;
   String description = '';
-  String lastSeen= '';
+  String lastSeen = '';
   List<dynamic> photos = <Photo>[];
 
   Profile(this.id, this.nickname, this.birthdate, this.hornLength, this.gender,
@@ -20,12 +20,11 @@ class Profile {
     birthdate = profileMap['birthdate'];
     hornLength = profileMap['hornlength'];
     gender = profileMap['gender'];
-    attractedToGender = profileMap['attractedToGender']?? 0;
+    attractedToGender = profileMap['attractedToGender'] ?? 0;
     //TODO Klassen so wie in Flutter anlegen und dann wiehier auf null safty prüfen
     description = profileMap['description'];
     lastSeen = profileMap['lastseen'];
     photos = profileMap['photos'];
-
   }
 
   @override
